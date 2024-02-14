@@ -1,0 +1,175 @@
+---
+title: Diversity Plots and Network Analysis
+author: Your Name
+date: February 14, 2024
+output: R_analysis
+---
+
+## **Introduction**
+
+This document presents an analysis of diversity and network properties using R packages for microbiome data. It includes loading necessary packages, data preprocessing, diversity analysis, and network construction.
+
+**Loading Packages**
+
+```{r load-packages, echo=TRUE}
+# Loading necessary packages
+library(dplyr)
+library(ggforce)
+library(ggplot2)
+library(igraph)
+library(LaplacesDemon)
+library(limma)
+library(microbiome)
+library(NetCoMi)
+library(phyloseq)
+library(sjPlot)
+library(vegan)
+```
+
+**Loading the necessary data for creating phyloseq objects**
+
+```{r}
+# Setting the working directory
+working_path <- "/Users/apple/Desktop/Diversity/Output_data/phyloseq_source/"
+
+# Loading and processing the data
+environments <- c("all", "Hospital", "MetaSUB", "Office")
+
+# Looping over environments
+for (env in environments) {
+  
+  # Constructing file paths
+  otu_file <- paste(working_path, env, "_filtered_data.csv", sep="")
+  metadata_file <- paste(working_path, env, "_filtered_metadata.csv", sep="")
+  taxa_file <- paste(working_path, env, "_filtered_taxa.csv", sep="")
+  
+  # Reading OTU data
+  otu_data <- read.table(otu_file, sep = ',', header=TRUE, check.names=FALSE)
+  otu_data <- data.frame(otu_data[,-1], row.names = otu_data[,1], check.names=FALSE)
+  otu_data <- otu_table(otu_data, taxa_are_rows = TRUE)
+  
+  # Reading metadata
+  meta_data <- read.table(metadata_file, sep = ',', header=TRUE)
+  meta_data <- data.frame(meta_data[,-1], row.names = meta_data[,1])
+  meta_data <- sample_data(meta_data)
+  
+  # Reading taxonomy data
+  taxa_data <- read.table(taxa_file, sep = ',', header=TRUE)
+  taxa_data <- data.frame(taxa_data[,-1], row.names = taxa_data[,1])
+  taxa_data <- as.matrix(taxa_data)
+  taxa_data <- tax_table(taxa_data)
+  
+  # Creating phyloseq object
+  physeq <- phyloseq(otu_data, taxa_data, meta_data) 
+  assign(paste0("physeq_", env), physeq)
+}
+```
+
+## **Diversity Analysis**
+
+**Alpha Diversity**
+
+```{r}
+# Calculating alpha diversity
+alpha_div <- microbiome::alpha(physeq_all, index = "all")
+
+# Plotting alpha diversity
+p.shannon <- boxplot_alpha(physeq_all, index = "shannon", x_var = "Environment") +
+  theme_minimal() + labs(x="Environment", y="Shannon diversity")
+p.shannon
+```
+
+**Alpha Diversity: Significance Testing**
+
+```{r}
+# Testing differences
+dif <- meta(physeq_all)
+dif$diversity <- alpha_div$diversity_shannon
+spl <- split(dif$diversity, dif$Environment)
+
+p_matrix <- matrix(NA, nrow = length(spl), ncol = length(spl))
+
+for (i in 1:length(spl)) {
+  for (j in 1:length(spl)) {
+    if (i != j) {
+      ks_result <- ks.test(spl[[i]], spl[[j]])$p.value
+      ks_result <- p.adjust(ks_result, method = "BH")
+      p_matrix[i, j] <- ks_result
+    } else {
+      p_matrix[i, j] <- 1  # Diagonal elements (self-comparisons)
+    }
+  }
+}
+
+rownames(p_matrix) <- colnames(p_matrix) <- names(spl)
+
+# Saving the plot
+ggsave(paste0(working_path, "shannon_plot.svg"), plot = p.shannon, 
+       width = 4, height = 5)
+```
+
+**Beta Diversity**
+
+```{r}
+# Calculating beta diversity
+beta_div <- distance(physeq_all, method = "bray")
+
+# Performing PCoA
+set.seed(123)
+pcoa_result <- ordinate(physeq_all, method = "NMDS", distance = "bray")
+```
+
+```{r}
+# Plotting beta diversity
+p.beta <- plot_ordination(physeq_all, pcoa_result, color = "Environment") + 
+  geom_point(aes(color = Environment), size = 3) +
+  stat_ellipse(aes(x = NMDS1, y = NMDS2, group = Environment),
+               geom = "polygon", alpha = 0.1, 
+               linetype = "dashed", color = "black") +
+  theme_minimal()
+p.beta
+
+ggsave(paste0(working_path, "beta_plot.svg"), plot = p.beta, 
+              width = 6, height = 5)
+```
+
+**Beta Diversity: Significance Testing**
+
+```{r}
+# Testing differences
+adonis_result <- adonis2(beta_div ~ Environment, 
+                         data = as(sample_data(physeq_all), "data.frame"),
+                         permutations = 999, method = "bray")
+```
+
+```{r}
+
+# Recheck
+b.hosp <- divergence(subset_samples(physeq_all, Environment == "Hospital"),
+                     apply(abundances(subset_samples(physeq_all, Environment == "Hospital")), 1, median))
+
+b.offc <- divergence(subset_samples(physeq_all, Environment == "Office"),
+                     apply(abundances(subset_samples(physeq_all, Environment == "Office")), 1, median))
+
+b.msub <- divergence(subset_samples(physeq_all, Environment == "MetaSUB"),
+                     apply(abundances(subset_samples(physeq_all, Environment == "MetaSUB")), 1, median))
+```
+
+```{r}
+
+# recheck
+library(reshape)
+l<- list(b.hosp, b.offc, b.msub)
+df<- melt(l)
+df$L1[df$L1 == '1']<- 'Hosp'
+df$L1[df$L1 == '2']<- 'Offc'
+df$L1[df$L1 == '3']<- 'MSub'
+
+df$L1<- factor(df$L1, levels = c('Hosp','Offc', 'MSub'))
+
+
+
+p<- ggplot(df, aes(x = L1, y = value)) + geom_boxplot()+ xlab('')
+
+plot(p)
+```
