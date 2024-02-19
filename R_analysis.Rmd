@@ -137,39 +137,50 @@ ggsave(paste0(working_path, "beta_plot.svg"), plot = p.beta,
 
 ```{r}
 # Testing differences
-adonis_result <- adonis2(beta_div ~ Environment, 
+adonis_result <- adonis2(beta_div ~ Environment + Surface.Material + Location + Site, 
                          data = as(sample_data(physeq_all), "data.frame"),
-                         permutations = 999, method = "bray")
+                         permutations = 999, method = "bray", by = "terms")
 ```
 
-```{r}
-
-# Recheck
-b.hosp <- divergence(subset_samples(physeq_all, Environment == "Hospital"),
-                     apply(abundances(subset_samples(physeq_all, Environment == "Hospital")), 1, median))
-
-b.offc <- divergence(subset_samples(physeq_all, Environment == "Office"),
-                     apply(abundances(subset_samples(physeq_all, Environment == "Office")), 1, median))
-
-b.msub <- divergence(subset_samples(physeq_all, Environment == "MetaSUB"),
-                     apply(abundances(subset_samples(physeq_all, Environment == "MetaSUB")), 1, median))
-```
+## **Network Construction**
 
 ```{r}
+# Network construction
+environments <- environments[environments != "all"]
 
-# recheck
-library(reshape)
-l<- list(b.hosp, b.offc, b.msub)
-df<- melt(l)
-df$L1[df$L1 == '1']<- 'Hosp'
-df$L1[df$L1 == '2']<- 'Offc'
-df$L1[df$L1 == '3']<- 'MSub'
-
-df$L1<- factor(df$L1, levels = c('Hosp','Offc', 'MSub'))
-
-
-
-p<- ggplot(df, aes(x = L1, y = value)) + geom_boxplot()+ xlab('')
-
-plot(p)
+for (env in environments) {
+  print(env)
+  physeq_env <- get(paste0("physeq_", env))
+  
+  # Network construction
+  micro_net <- netConstruct(physeq_env,
+                            measure = "gcoda",
+                            normMethod = "clr",
+                            zeroMethod = "multRepl",
+                            dissFunc = "signed",
+                            sparsMethod = "bootstrap",
+                            alpha = 0.05,
+                            adjust = "adaptBH",
+                            nboot = 1000L,
+                            assoBoot = NULL,
+                            logFile = "log.txt",
+                            cores = 3,
+                            knnMutual = FALSE,
+                            seed = 123,
+                            verbose = 3)
+  
+  net_prop <- netAnalyze(micro_net, clustMethod = "cluster_fast_greedy",
+                            weightDeg =  FALSE, normDeg = FALSE,
+                            centrLCC = FALSE,
+                            hubPar = c("degree", "eigenvector", "betweeness",
+                                       "closeness"))
+  
+  edges <- dplyr::select(micro_net$edgelist1, v1, v2)
+  edges$Weight <- micro_net$edgelist1$adja
+  
+  
+  write.csv(edges, file = paste0(working_path, env,"_edges.tsv"), 
+            row.names = FALSE)
+  
+}
 ```
