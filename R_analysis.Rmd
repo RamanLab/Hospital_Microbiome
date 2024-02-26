@@ -184,3 +184,28 @@ for (env in environments) {
   
 }
 ```
+
+**Class Level Plot**
+
+```{r}
+# Class-level plot
+pseq.class.rel <-aggregate_rare(physeq_all, level = "class", 
+                                detection = 0.001, prevalence = 0.1)
+
+
+p.compositions <- plot_composition(pseq.class.rel,
+                      average_by = "Environment") + 
+  guides(fill = guide_legend(ncol = 1)) + 
+  labs(x = "Study", 
+       y = "Relative abundance")
+#title = "Relative abundance data", 
+#subtitle = "Subtitle",
+#caption = "Caption text.") 
+p.compositions <- p.compositions + scale_fill_brewer("Class", 
+                      palette = "Paired") + theme_minimal()
+
+p.compositions
+
+ggsave(paste0(working_path, "composition_plot.svg"), plot = p.compositions, 
+       width = 6, height = 5)
+```
