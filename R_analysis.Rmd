@@ -1,6 +1,6 @@
 ---
 title: Diversity Plots and Network Analysis
-author: Your Name
+author: Pratyay Sengupta, Vijay Kapse
 date: February 14, 2024
 output: R_analysis
 ---
@@ -30,7 +30,10 @@ library(vegan)
 
 ```{r}
 # Setting the working directory
-working_path <- "/Users/apple/Desktop/Diversity/Output_data/phyloseq_source/"
+phyloseq_path <- "D:/PhD Work/Vijay/Data/Output_data/phyloseq_source/"
+network_path <- "D:/PhD Work/Vijay/Data/Output_data/network_files/"
+figure_path <- "D:/PhD Work/Vijay/Data/Figures/"
+
 
 # Loading and processing the data
 environments <- c("all", "Hospital", "MetaSUB", "Office")
@@ -74,8 +77,9 @@ for (env in environments) {
 alpha_div <- microbiome::alpha(physeq_all, index = "all")
 
 # Plotting alpha diversity
-p.shannon <- boxplot_alpha(physeq_all, index = "shannon", x_var = "Environment") +
-  theme_minimal() + labs(x="Environment", y="Shannon diversity")
+p.shannon <- boxplot_alpha(physeq_all, index = "shannon", x_var = "Environment",
+                           element.alpha = 0.5) +
+  theme_classic() + labs(x="Environment", y="Shannon diversity")
 p.shannon
 ```
 
@@ -104,7 +108,7 @@ for (i in 1:length(spl)) {
 rownames(p_matrix) <- colnames(p_matrix) <- names(spl)
 
 # Saving the plot
-ggsave(paste0(working_path, "shannon_plot.svg"), plot = p.shannon, 
+ggsave(paste0(figure_path, "Fig_2B.svg"), plot = p.shannon, 
        width = 4, height = 5)
 ```
 
@@ -129,8 +133,10 @@ p.beta <- plot_ordination(physeq_all, pcoa_result, color = "Environment") +
   theme_minimal()
 p.beta
 
-ggsave(paste0(working_path, "beta_plot.svg"), plot = p.beta, 
+ggsave(paste0(figure_path, "Fig_2C.svg"), plot = p.beta, 
               width = 6, height = 5)
+
+
 ```
 
 **Beta Diversity: Significance Testing**
@@ -158,12 +164,12 @@ p.compositions <- plot_composition(pseq.class.rel,
 #title = "Relative abundance data", 
 #subtitle = "Subtitle",
 #caption = "Caption text.") 
-p.compositions <- p.compositions + scale_fill_brewer("Class", 
+p.compositions <- p.compositions + scale_fill_brewer("Abundant Class", 
                       palette = "Paired") + theme_minimal()
 
 p.compositions
 
-ggsave(paste0(working_path, "composition_plot.svg"), plot = p.compositions, 
+ggsave(paste0(figure_path, "Fig_2D.svg"), plot = p.compositions, 
        width = 6, height = 5)
 ```
 
@@ -180,7 +186,7 @@ for (env in environments) {
   # Network construction
   micro_net <- netConstruct(physeq_env,
                             measure = "gcoda",
-                            normMethod = "clr",
+                            normMethod = "TSS",
                             zeroMethod = "multRepl",
                             dissFunc = "signed",
                             sparsMethod = "bootstrap",
@@ -194,18 +200,75 @@ for (env in environments) {
                             seed = 123,
                             verbose = 3)
   
+  # Network properties
   net_prop <- netAnalyze(micro_net, clustMethod = "cluster_fast_greedy",
                             weightDeg =  FALSE, normDeg = FALSE,
-                            centrLCC = FALSE,
-                            hubPar = c("degree", "eigenvector", "betweeness",
-                                       "closeness"))
+                            centrLCC = TRUE,
+                            hubPar = c("degree", "eigenvector", 
+                                       "betweeness", "closeness"))
+  
+  assign(paste0("network_", env), micro_net)
+  assign(paste0("properties_", env), net_prop)
   
   edges <- dplyr::select(micro_net$edgelist1, v1, v2)
   edges$Weight <- micro_net$edgelist1$adja
   
-  
-  write.csv(edges, file = paste0(working_path, env,"_edges.tsv"), 
+  write.csv(edges, file = paste0(network_path, env,"_edges.tsv"), 
             row.names = FALSE)
+}
+```
+
+**Extracting required properties and details from the network**
+
+```{r}
+# Consolidation of basic network properties
+# Function to remove NULL values from a list
+remove_null_elements <- function(lst) {
+  new_list <- lapply(lst, function(x) x[!is.null(x)])
+  new_list <- new_list[sapply(new_list, length) > 0]  # Remove empty elements
+  new_list
+}
+
+
+
+
+```
+
+**Collecting hub information**
+
+```{r}
+# Consolidation of hub information
+centralities <- c("degree1", "between1", "close1", "eigenv1")
+
+# Storing the results in a list for plotting
+centrality_list <- list()
+
+# Looping through environments
+for (env in environments) {
+  print(env)
+  hubs <- data.frame()
+  for (cent in centralities) {
+    net_hub <- get(paste0("properties_", env))
+    hub_info <-  head(sort(net_hub$centralities[[cent]], decreasing = TRUE), 10)
+    hub_df <- data.frame(cent = names(hub_info), value = hub_info)
+    
+    # Modification of the dataframe
+    col_name <- c("Organism", as.character(cent))
+    names(hub_df) <- col_name
+    row.names(hub_df) <- NULL
+    
+    # Appending the result to the list
+    centrality_list[[paste0(env, "_", cent)]] <- hub_df$Organism
+    
+    if (nrow(hubs) == 0) {
+      hubs <- hub_df
+    }
+    else {
+      hubs <- cbind(hubs, hub_df)
+    }
+  }
   
+  # Saving the dataframe
+  assign(paste0("hubs_", env), hubs)
 }
 ```
