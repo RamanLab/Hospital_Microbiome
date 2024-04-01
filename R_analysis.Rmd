@@ -16,6 +16,8 @@ This document presents an analysis of diversity and network properties using R p
 library(dplyr)
 library(ggforce)
 library(ggplot2)
+library(ggpubr)
+library(gplots)
 library(igraph)
 library(LaplacesDemon)
 library(limma)
@@ -42,9 +44,10 @@ environments <- c("all", "Hospital", "MetaSUB", "Office")
 for (env in environments) {
   
   # Constructing file paths
-  otu_file <- paste(working_path, env, "_filtered_data.csv", sep="")
-  metadata_file <- paste(working_path, env, "_filtered_metadata.csv", sep="")
-  taxa_file <- paste(working_path, env, "_filtered_taxa.csv", sep="")
+  otu_file <- paste(phyloseq_path, env, "_filtered_data.csv", sep="")
+  metadata_file <- paste(phyloseq_path, env, "_filtered_metadata.csv", 
+                         sep="")
+  taxa_file <- paste(phyloseq_path, env, "_filtered_taxa.csv", sep="")
   
   # Reading OTU data
   otu_data <- read.table(otu_file, sep = ',', header=TRUE, check.names=FALSE)
@@ -118,25 +121,69 @@ ggsave(paste0(figure_path, "Fig_2B.svg"), plot = p.shannon,
 # Calculating beta diversity
 beta_div <- distance(physeq_all, method = "bray")
 
-# Performing PCoA
+# Performing NMDS
 set.seed(123)
-pcoa_result <- ordinate(physeq_all, method = "NMDS", distance = "bray")
+nmds_result <- ordinate(physeq_all, method = "NMDS", distance = "bray")
 ```
 
 ```{r}
 # Plotting beta diversity
-p.beta <- plot_ordination(physeq_all, pcoa_result, color = "Environment") + 
+p.beta <- plot_ordination(physeq_all, nmds_result, color = "Environment") + 
   geom_point(aes(color = Environment), size = 3) +
   stat_ellipse(aes(x = NMDS1, y = NMDS2, group = Environment),
                geom = "polygon", alpha = 0.1, 
                linetype = "dashed", color = "black") +
   theme_minimal()
+
 p.beta
 
 ggsave(paste0(figure_path, "Fig_2C.svg"), plot = p.beta, 
               width = 6, height = 5)
+```
 
+```{r}
+# Getting the environmental data from the phyloseq object
+environment_data <- data.frame(sample_data(physeq_all))
 
+# Extracting the NMDS data from the NMDS object
+nmds_data <- data.frame(nmds_result$points)
+nmds_data <- cbind(nmds_data, environment_data)
+
+# Creating box plots for NMDS axes 
+p.box1 <- ggplot(nmds_data, aes(x = MDS1, y = 1, fill = Environment)) +
+  geom_boxplot() +
+  labs(x = "", y = "NMDS2") +
+  coord_cartesian(xlim = c(-3.5, 5.5)) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p.box2 <- ggplot(nmds_data, aes(x = 1, y = MDS2, fill = Environment)) +
+  geom_boxplot() +
+  labs(x = "NMDS1", y = "") +
+  coord_cartesian(ylim = c(-4.5, 4.5)) +
+  #facet_wrap(~Environment) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+```{r}
+# Combine scatter plot and marginal box plots
+ combined_plot <- ggarrange(
+   p.box1,
+   NULL,
+   p.beta + theme(legend.position = "none"), 
+   p.box2,
+   ncol = 2,
+   nrow = 2,
+   widths = c(10, 3),  
+   heights = c(3, 10)  
+ )
+
+ggsave(paste0(figure_path, "Fig_2C_v2.svg"), plot = combined_plot, 
+              width = 6, height = 5)
+
+combined_plot
 ```
 
 **Beta Diversity: Significance Testing**
@@ -202,19 +249,84 @@ for (env in environments) {
   
   # Network properties
   net_prop <- netAnalyze(micro_net, clustMethod = "cluster_fast_greedy",
-                            weightDeg =  FALSE, normDeg = FALSE,
+                            weightDeg = FALSE,
                             centrLCC = TRUE,
                             hubPar = c("degree", "eigenvector", 
-                                       "betweeness", "closeness"))
+                                       "betweeness", "closeness"),
+                            gcmHeat = FALSE)
   
   assign(paste0("network_", env), micro_net)
   assign(paste0("properties_", env), net_prop)
   
+  # Saving edges details (class-level analysis)
+  edge_details <- dplyr::select(micro_net$edgelist1, v1, v2)
+  edge_details$Weight <- micro_net$edgelist1$adja
+  
+  write.csv(edge_details, file = paste0(network_path, env,"_edges.tsv"), 
+            row.names = FALSE)
+  
+  # Saving edges details (gephi)
   edges <- dplyr::select(micro_net$edgelist1, v1, v2)
+  edges$Source <- as.numeric(factor(edges$v1))
+  edges$Target <- as.numeric(factor(edges$v2))
+  edges$Type <- "Undirected"
   edges$Weight <- micro_net$edgelist1$adja
   
-  write.csv(edges, file = paste0(network_path, env,"_edges.tsv"), 
-            row.names = FALSE)
+  # Saving nodes details (gephi)
+  nodes <- unique(edges[,c('v1','Source')])
+  colnames(nodes) <- c("Label", "Id")
+
+  # Add category with clusters (can be used as node colors in Gephi)
+  nodes$Category <- net_prop$clustering$clust1[nodes$Label]
+
+  edges <- dplyr::select(edges, Source, Target, Type, Weight)
+
+  
+  write.csv(nodes, file = paste0(network_path, "gephi_inputs/", 
+                                 env,"_nodes.csv"), row.names = FALSE)
+  write.csv(edges, file = paste0(network_path, "gephi_inputs/", 
+                                 env,"_edges.csv"), row.names = FALSE)
+}
+```
+
+**Network Visualization**
+
+```{r}
+for (env in environments){
+  
+  prop_plot <- get(paste0("properties_", env))
+  
+  svg(paste0(figure_path, paste0(env, "_network.svg"), 
+             width = 12, height = 10))
+  
+  net_plot <- plot(prop_plot, 
+          layout = "spring",
+          repulsion = 0.65,
+          labels = FALSE,
+          
+          # Nodes:
+          rmSingles = TRUE,
+          nodeColor = "cluster", 
+          nodeSize = "degree",
+          nodeShape1 = "circle",
+          borderWidth = 1,
+          borderCol = "black",
+          nodeSizeSpread = 3,
+          cexNodes = 2,
+          colorVec = phylcol <- c("coral4", "deeppink", "khaki3",
+                                  "green4", "darkgreen"),
+          
+          # Edges:
+          edgeWidth = 0.5,
+          
+          # Edge interactions
+          negDiffCol = TRUE,
+          posCol = "darkblue",
+          negCol = "darkorange3",
+          edgeTranspLow = 30,
+          edgeTranspHigh = 60)
+  
+  dev.off()
 }
 ```
 
@@ -222,15 +334,87 @@ for (env in environments) {
 
 ```{r}
 # Consolidation of basic network properties
-# Function to remove NULL values from a list
-remove_null_elements <- function(lst) {
-  new_list <- lapply(lst, function(x) x[!is.null(x)])
-  new_list <- new_list[sapply(new_list, length) > 0]  # Remove empty elements
-  new_list
+deg <- 
+betweenness
+clustering coeef
+modularity
+
+
+
+
+```
+
+**Clusters information**
+
+```{r}
+# Initialize list to store cluster-wise names
+names_cluster_wise <- list()
+
+# Iterate over environments
+for (env in environments) {
+  
+  # Extract cluster information
+  prop_plot <- get(paste0("properties_", env))
+  cluster_info <- as.data.frame(prop_plot$clusteringLCC$clust1)
+  
+  # Assign column names
+  names(cluster_info) <- paste0(env, "_LCC_clusters")
+  
+  # Write cluster info to CSV
+  write.csv(cluster_info, file = paste0(network_path, 
+                  "clusters/", env, "_LCC_clusters.csv"))
+  
+  # Get number of clusters
+  nclust <- as.numeric(max(cluster_info))
+  
+  # Loop over clusters
+  for (i in 1:nclust) {
+    # Subset cluster info for current cluster
+    names <- cluster_info[cluster_info[[1]] == i, , drop = FALSE]
+    
+    # Store row names in names_cluster_wise list
+    names_cluster_wise[[paste0(as.character(env), 
+                  "_", i)]] <- rownames(names)
+  }
 }
 
+# Function to compute Jaccard similarity between two sets
+jaccard_similarity <- function(set1, set2) {
+  intersection <- length(intersect(set1, set2))
+  union <- length(union(set1, set2))
+  return(intersection / union)
+}
 
+# Function to create all-vs-all similarity matrix with key names
+create_similarity_matrix <- function(list_of_lists) {
+  n <- length(list_of_lists)
+  keys <- names(list_of_lists)
+  similarity_matrix <- matrix(0, n, n, dimnames = list(keys, keys))
+  
+  # Calculate Jaccard similarity for all pairs of lists
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      similarity <- jaccard_similarity(list_of_lists[[i]], 
+                  list_of_lists[[j]])
+      similarity_matrix[i, j] <- similarity
+      similarity_matrix[j, i] <- similarity
+    }
+  }
+  
+  # Round similarity values to two decimal places
+  similarity_matrix <- round(similarity_matrix, 2)
+  
+  # Set upper triangular part to NA
+  similarity_matrix[upper.tri(similarity_matrix)] <- NA
+  
+  return(similarity_matrix)
+}
 
+# Compute all-vs-all similarity matrix
+similarity_matrix <- create_similarity_matrix(names_cluster_wise)
+
+# Write similarity matrix to CSV
+write.csv(similarity_matrix, file = paste0(network_path, "clusters/", "similarity_matrix.csv"))
 
 ```
 
@@ -270,5 +454,9 @@ for (env in environments) {
   
   # Saving the dataframe
   assign(paste0("hubs_", env), hubs)
+  
+  write.csv(hubs, file = paste0(network_path, "hub_files/", 
+                                env,"_hubs.tsv"), 
+            row.names = FALSE)
 }
 ```
