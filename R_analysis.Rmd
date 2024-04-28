@@ -32,9 +32,9 @@ library(vegan)
 
 ```{r}
 # Setting the working directory
-phyloseq_path <- "D:/PhD Work/Vijay/Data/Output_data/phyloseq_source/"
-network_path <- "D:/PhD Work/Vijay/Data/Output_data/network_files/"
-figure_path <- "D:/PhD Work/Vijay/Data/Figures/"
+phyloseq_path <- "/mnt/Local_Disk_1/Hospital_Microbiome/Data/Output_data/phyloseq_source/"
+network_path <- "/mnt/Local_Disk_1/Hospital_Microbiome/Data/Output_data/network_files/"
+figure_path <- "/mnt/Local_Disk_1/Hospital_Microbiome/Data/Figures/"
 
 
 # Loading and processing the data
@@ -334,14 +334,149 @@ for (env in environments){
 
 ```{r}
 # Consolidation of basic network properties
-deg <- 
-betweenness
-clustering coeef
-modularity
+
+all_nodes <- length(properties_Office$clustering$clust1)
+nodes <- length(properties_Office$clusteringLCC$clust1)
+
+edges <- nrow(network_Office$edgelist1)
+neg <- sum(network_Office$edgelist1$asso < 0)
+pos <- sum(network_Office$edgelist1$asso > 0)
+
+# properties of LCC
+cluster <- as.numeric(max(properties_MetaSUB$clusteringLCC$clust1))
+modularity <- as.numeric(properties_Office$globalPropsLCC$modularity1)
+clustering_coeff <- as.numeric(properties_Office$globalPropsLCC$clustCoef1)
+density <- as.numeric(properties_Office$globalPropsLCC$density1)
+
+deg <- properties_Office$centralities$degree1
+non_zero_deg <- deg[deg != 0]
+length(non_zero_deg)
+deg_avg <- mean(non_zero_deg)
+deg_std <- sd(non_zero_deg)
+
+close <- properties_Office$centralities$close1
+non_zero_close <- close[close != 0]
+length(non_zero_close)
+close_avg <- mean(non_zero_close)
+close_std <- sd(non_zero_close)
+
+between <- properties_Office$centralities$between1
+non_zero_between <- between[between != 0]
+length(non_zero_between)
+between_avg <- mean(non_zero_between)
+between_std <- sd(non_zero_between)
+
+eigenv <- properties_Office$centralities$eigenv1
+non_zero_eigenv <- eigenv[eigenv != 0]
+length(non_zero_eigenv)
+eigenv_avg <- mean(non_zero_eigenv)
+eigenv_std <- sd(non_zero_eigenv)
 
 
 
+```
 
+```{r}
+# Create an empty data frame to store the results
+
+# Iterate over environments
+for (env in environments) {
+  # Get properties and network for the current environment
+  prop_net <- get(paste0("properties_", env))
+  net_data <- get(paste0("network_", env))
+  
+  # Get corresponding variables for the current environment
+  all_nodes <- length(prop_net$clustering$clust1)
+  nodes <- length(prop_net$clusteringLCC$clust1)
+  edges <- nrow(get(paste0("network_", env))$edgelist1)
+  neg <- sum(net_data$edgelist1$asso < 0)
+  pos <- sum(net_data$edgelist1$asso > 0)
+  cluster <- as.numeric(max(prop_net$clusteringLCC$clust1))
+  modularity <- as.numeric(prop_net$globalPropsLCC$modularity1)
+  clustering_coeff <- as.numeric(prop_net$globalPropsLCC$clustCoef1)
+  density <- as.numeric(prop_net$globalPropsLCC$density1)
+  
+  
+  deg <- prop_net$centralities$degree1
+  non_zero_deg <- deg[deg != 0]
+  deg_avg <- mean(non_zero_deg)
+  deg_std <- sd(non_zero_deg)
+  close <- prop_net$centralities$close1
+  non_zero_close <- close[close != 0]
+  close_avg <- mean(non_zero_close)
+  close_std <- sd(non_zero_close)
+  between <- prop_net$centralities$between1
+  non_zero_between <- between[between != 0]
+  between_avg <- mean(non_zero_between)
+  between_std <- sd(non_zero_between)
+  eigenv <- prop_net$centralities$eigenv1
+  non_zero_eigenv <- eigenv[eigenv != 0]
+  eigenv_avg <- mean(non_zero_eigenv)
+  eigenv_std <- sd(non_zero_eigenv)
+  
+  
+  # Store the variables in a data frame
+  result <- data.frame(
+    all_nodes = all_nodes,
+    nodes = nodes,
+    edges = edges,
+    neg = neg,
+    pos = pos,
+    cluster = cluster,
+    modularity = modularity,
+    clustering_coeff = clustering_coeff,
+    density = density,
+    deg_avg = deg_avg,
+    deg_std = deg_std,
+    close_avg = close_avg,
+    close_std = close_std,
+    between_avg = between_avg,
+    between_std = between_std,
+    eigenv_avg = eigenv_avg,
+    eigenv_std = eigenv_std
+  )
+  
+
+}
+
+```
+
+**Plot**
+
+```{r}
+
+features <- list()
+node_count <- list()
+edge_count <- list()
+
+for (env in environments){
+  physeq_object <- get(paste0("physeq_", env))
+  feat <- nrow(otu_table(physeq_object))
+  features <- c(features, feat)
+  
+  prop_object <- get(paste0("properties_", env))
+  node <- length(prop_object$clusteringLCC$clust1)
+  node_count <- c(node_count, node)
+  
+  net_data <- get(paste0("network_", env))
+  edge <- nrow(net_data$edgelist1)
+  edge_count <- c(edge_count, edge)
+}
+
+#svg(paste0(figure_path, "feature_plots.svg", width = 10, height = 6))
+
+# Create a new window with two plots side by side
+par(mfrow = c(1, 2))
+
+# Plot list1 vs list2
+plot(features, node_count, xlab = "Features", 
+     ylab = "Node Count(LCC)", main = "Features vs Node", pch = 16)
+
+# Plot list1 vs list3
+plot(features, edge_count, xlab = "Features", 
+     ylab = "Edge Count", main = "Features vs Edge", pch = 16)
+
+#dev.off()
 ```
 
 **Clusters information**
@@ -382,7 +517,7 @@ for (env in environments) {
 jaccard_similarity <- function(set1, set2) {
   intersection <- length(intersect(set1, set2))
   union <- length(union(set1, set2))
-  return(intersection / union)
+  return(1 - (intersection / union))
 }
 
 # Function to create all-vs-all similarity matrix with key names
@@ -414,8 +549,20 @@ create_similarity_matrix <- function(list_of_lists) {
 similarity_matrix <- create_similarity_matrix(names_cluster_wise)
 
 # Write similarity matrix to CSV
-write.csv(similarity_matrix, file = paste0(network_path, "clusters/", "similarity_matrix.csv"))
+write.csv(similarity_matrix, file = paste0(network_path, "clusters/", "distance_matrix.csv"))
 
+```
+
+```{r}
+hc <- hclust(as.dist(similarity_matrix))
+
+svg(file = paste0(figure_path, "Figure_4D.svg"), 
+             width = 6, height = 5)
+
+# Plot the dendrogram
+plot(hc, main = "Hierarchical Clustering Dendrogram")
+
+dev.off()
 ```
 
 **Collecting hub information**
@@ -433,7 +580,8 @@ for (env in environments) {
   hubs <- data.frame()
   for (cent in centralities) {
     net_hub <- get(paste0("properties_", env))
-    hub_info <-  head(sort(net_hub$centralities[[cent]], decreasing = TRUE), 10)
+    hub_info <-  head(sort(net_hub$centralities[[cent]], 
+                           decreasing = TRUE), 10)
     hub_df <- data.frame(cent = names(hub_info), value = hub_info)
     
     # Modification of the dataframe
