@@ -7,7 +7,9 @@ output: R_analysis
 
 ## **Introduction**
 
-This document presents an analysis of diversity and network properties using R packages for microbiome data. It includes loading necessary packages, data preprocessing, diversity analysis, and network construction.
+This document presents an analysis of diversity and network properties 
+using R packages for microbiome data. It includes loading necessary packages, 
+data pre-processing, diversity analysis, and network construction.
 
 **Loading Packages**
 
@@ -26,6 +28,7 @@ library(NetCoMi)
 library(phyloseq)
 library(sjPlot)
 library(vegan)
+library(dendextend)
 ```
 
 **Loading the necessary data for creating phyloseq objects**
@@ -290,9 +293,23 @@ for (env in environments) {
 **Network Visualization**
 
 ```{r}
-for (env in environments){
+
+# Defining color palettes
+color_palettes <- list(
+  c("coral4", "deeppink", "khaki3", "green4", "darkgreen"),
+  c("blue", "orange", "purple", "red", "yellow"),
+  c("cyan", "magenta", "plum", "salmon", "darkviolet")
+  #c("navy", "turquoise", "plum", "brown", "olive"),
+  #c("darkred", "darkblue", "darkgreen", "darkorange", "darkviolet")
+)
+
+
+for (i in seq_along(environments)){
+  env <- environments[i]
   
   prop_plot <- get(paste0("properties_", env))
+  
+  color_pal <- color_palettes[[i]]
   
   svg(paste0(figure_path, paste0(env, "_network.svg"), 
              width = 12, height = 10))
@@ -311,8 +328,7 @@ for (env in environments){
           borderCol = "black",
           nodeSizeSpread = 3,
           cexNodes = 2,
-          colorVec = phylcol <- c("coral4", "deeppink", "khaki3",
-                                  "green4", "darkgreen"),
+          colorVec = color_pal,
           
           # Edges:
           edgeWidth = 0.5,
@@ -369,8 +385,6 @@ non_zero_eigenv <- eigenv[eigenv != 0]
 length(non_zero_eigenv)
 eigenv_avg <- mean(non_zero_eigenv)
 eigenv_std <- sd(non_zero_eigenv)
-
-
 
 ```
 
@@ -484,7 +498,8 @@ plot(features, edge_count, xlab = "Features",
 names_cluster_wise <- list()
 
 # Iterate over environments
-for (env in environments) {
+for (i in seq_along(environments)){
+  env <- environments[i]
   
   # Extract cluster information
   prop_plot <- get(paste0("properties_", env))
@@ -501,13 +516,13 @@ for (env in environments) {
   nclust <- as.numeric(max(cluster_info))
   
   # Loop over clusters
-  for (i in 1:nclust) {
+  for (j in 1:nclust) {
     # Subset cluster info for current cluster
-    names <- cluster_info[cluster_info[[1]] == i, , drop = FALSE]
+    names <- cluster_info[cluster_info[[1]] == j, , drop = FALSE]
     
     # Store row names in names_cluster_wise list
     names_cluster_wise[[paste0(as.character(env), 
-                  "_", i)]] <- rownames(names)
+                  "_", j)]] <- rownames(names)
   }
 }
 
