@@ -24,7 +24,6 @@ library(limma)
 library(microbiome)
 library(NetCoMi)
 library(phyloseq)
-library(poweRlaw)
 library(sjPlot)
 library(vegan)
 library(dendextend)
@@ -70,6 +69,60 @@ for (env in environments) {
   physeq <- phyloseq(otu_data, taxa_data, meta_data) 
   assign(paste0("physeq_", env), physeq)
 }
+```
+
+## **Diversity randomisation**
+
+```{r}
+# Setting seed for reproducibility
+set.seed(123)
+
+# Extracting metadata
+metadata <- sample_data(physeq_all)
+metadata <- cbind(Sample = rownames(metadata), metadata)
+rownames(metadata) <- 1:nrow(metadata)
+
+# Find the environment with the lowest number of samples
+env_counts <- table(metadata$Environment)
+min_env <- names(which.min(env_counts))
+min_n <- min(env_counts)  # Smallest number of samples
+
+# Store results
+alpha_results <- data.frame()
+
+# Run 100 iterations of random sampling and alpha diversity calculations
+for (i in 1:100) {
+  sampled_meta <- metadata %>%
+    group_by(Environment) %>%
+    filter(Environment == min_env | row_number() %in% sample(1:n(), min_n)) %>%
+    ungroup()
+  
+  sampled_physeq <- prune_samples(sample_names(physeq_all) %in% sampled_meta$Sample, physeq_all)
+  
+  # Calculate alpha diversity
+  alpha_div <- microbiome::alpha(sampled_physeq, index = "shannon")
+  alpha_div$Environment <- sampled_meta$Environment  # Add environment column
+  alpha_div$Iteration <- i  # Track iteration
+  
+  # Store results
+  alpha_results <- rbind(alpha_results, alpha_div)
+}
+
+# Plot alpha diversity
+p.shannon.random <- ggplot(alpha_results, aes(x = Environment, y = diversity_shannon, color = Environment)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  theme_classic() +
+  labs(x = "Environment", y = "Shannon Diversity") +
+  stat_compare_means(method = "anova", label.y = max(alpha_results$diversity_shannon) + 0.2) +  # Overall test
+  stat_compare_means(comparisons = list(c("Env1", "Env2"), c("Env1", "Env3"), c("Env2", "Env3")), method = "t.test")  # Pairwise tests
+
+p.shannon.random
+
+# Saving the plot
+ggsave(paste0(figure_path, "Supplementary_2.svg"), plot = p.shannon.random, 
+       width = 4, height = 5)
+
 ```
 
 ## **Diversity Analysis**
@@ -195,6 +248,86 @@ adonis_result <- adonis2(beta_div ~ Environment + Surface.Material + Location + 
                          permutations = 999, method = "bray", by = "terms")
 ```
 
+**Diversity for Randomised Community**
+
+```{r}
+set.seed(123)
+
+# Subsampling rndomly
+sample_data_df <- as.data.frame(sample_data(physeq_all))  
+hospital_samples <- rownames(sample_data_df[sample_data_df$Environment == "Hospital", ])
+metasub_samples <- rownames(sample_data_df[sample_data_df$Environment == "MetaSUB", ])
+office_samples <- rownames(sample_data_df[sample_data_df$Environment == "Office", ])  
+
+# Randomly select 30 samples from hospital and metasub
+hospital_selected <- sample(hospital_samples, 30)
+metasub_selected <- sample(metasub_samples, 30)
+
+# Combine selected samples
+selected_samples <- c(office_samples, hospital_selected, metasub_selected)
+
+# Prune phyloseq object to selected samples
+physeq_subset <- prune_samples(selected_samples, physeq_all)
+
+# Verify the sample counts
+table(sample_data(physeq_subset)$Environment)
+
+# Print the subsetted phyloseq object
+physeq_subset
+
+# Calculating alpha diversity
+alpha_div_sub <- microbiome::alpha(physeq_subset, index = "all")
+
+# Plotting alpha diversity
+p.shannon_sub <- boxplot_alpha(physeq_subset, index = "shannon", x_var = "Environment",
+                           element.alpha = 0.5) +
+  theme_classic() + labs(x="Environment", y="Shannon diversity")
+p.shannon_sub
+
+
+```
+
+```{r}
+# Testing differences
+dif <- meta(physeq_subset)
+dif$diversity <- alpha_div_sub$diversity_shannon
+spl <- split(dif$diversity, dif$Environment)
+
+p_matrix <- matrix(NA, nrow = length(spl), ncol = length(spl))
+
+for (i in 1:length(spl)) {
+  for (j in 1:length(spl)) {
+    if (i != j) {
+      ks_result <- ks.test(spl[[i]], spl[[j]])$p.value
+      ks_result <- p.adjust(ks_result, method = "BH")
+      p_matrix[i, j] <- ks_result
+    } else {
+      p_matrix[i, j] <- 1  # Diagonal elements (self-comparisons)
+    }
+  }
+}
+
+rownames(p_matrix) <- colnames(p_matrix) <- names(spl)
+```
+
+```{r}
+# Calculating beta diversity
+beta_div_sub <- distance(physeq_subset, method = "bray")
+
+# Performing NMDS
+set.seed(123)
+nmds_result_sub <- ordinate(physeq_subset, method = "NMDS", distance = "bray")
+
+p.beta_sub <- plot_ordination(physeq_subset, nmds_result_sub, color = "Environment") + 
+  geom_point(aes(color = Environment), size = 3) +
+  stat_ellipse(aes(x = NMDS1, y = NMDS2, group = Environment),
+               geom = "polygon", alpha = 0.1, 
+               linetype = "dashed", color = "black") +
+  theme_minimal()
+
+p.beta_sub
+```
+
 **Class Level Plot**
 
 ```{r}
@@ -215,15 +348,6 @@ p.compositions <- p.compositions + scale_fill_brewer("Abundant Class",
                       palette = "Paired") + theme_minimal()
 
 p.compositions
-
-# Converting to table
-comp_table <- reshape2::dcast(p.compositions$data, Tax ~ Sample, 
-                              value.var = "Abundance", fill = 0)
-
-# Save the data
-write.csv(comp_table,
-          paste0("/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/", 
-          "class_abundance_data.tsv"))
 
 ggsave(paste0(figure_path, "Fig_2D.svg"), plot = p.compositions, 
        width = 6, height = 5)
@@ -337,16 +461,14 @@ for (i in seq_along(environments)){
           nodeSizeSpread = 3,
           cexNodes = 2,
           colorVec = color_pal,
-          highlightHubs = FALSE,
-          nodeTransp = 0,
           
           # Edges:
           edgeWidth = 0.5,
           
           # Edge interactions
-          negDiffCol = FALSE,
-          #posCol = "darkblue",
-          #negCol = "darkorange3",
+          negDiffCol = TRUE,
+          posCol = "darkblue",
+          negCol = "darkorange3",
           edgeTranspLow = 30,
           edgeTranspHigh = 60)
   
@@ -397,9 +519,9 @@ eigenv_avg <- mean(non_zero_eigenv)
 eigenv_std <- sd(non_zero_eigenv)
 
 ```
+
 ```{r}
-# Initialize an empty list to store results
-results_list <- list()
+# Create an empty data frame to store the results
 
 # Iterate over environments
 for (env in environments) {
@@ -407,33 +529,38 @@ for (env in environments) {
   prop_net <- get(paste0("properties_", env))
   net_data <- get(paste0("network_", env))
   
-  # Basic network metrics
+  # Get corresponding variables for the current environment
   all_nodes <- length(prop_net$clustering$clust1)
   nodes <- length(prop_net$clusteringLCC$clust1)
-  edges <- nrow(net_data$edgelist1)
+  edges <- nrow(get(paste0("network_", env))$edgelist1)
   neg <- sum(net_data$edgelist1$asso < 0)
   pos <- sum(net_data$edgelist1$asso > 0)
-  cluster <- max(as.numeric(prop_net$clusteringLCC$clust1), na.rm = TRUE)
+  cluster <- as.numeric(max(prop_net$clusteringLCC$clust1))
   modularity <- as.numeric(prop_net$globalPropsLCC$modularity1)
   clustering_coeff <- as.numeric(prop_net$globalPropsLCC$clustCoef1)
   density <- as.numeric(prop_net$globalPropsLCC$density1)
   
-  # Centrality statistics helper function
-  centrality_stats <- function(metric) {
-    non_zero <- metric[metric != 0]
-    avg <- mean(non_zero, na.rm = TRUE)
-    std <- sd(non_zero, na.rm = TRUE)
-    return(c(avg, std))
-  }
   
-  deg_stats <- centrality_stats(prop_net$centralities$degree1)
-  close_stats <- centrality_stats(prop_net$centralities$close1)
-  between_stats <- centrality_stats(prop_net$centralities$between1)
-  eigenv_stats <- centrality_stats(prop_net$centralities$eigenv1)
+  deg <- prop_net$centralities$degree1
+  non_zero_deg <- deg[deg != 0]
+  deg_avg <- mean(non_zero_deg)
+  deg_std <- sd(non_zero_deg)
+  close <- prop_net$centralities$close1
+  non_zero_close <- close[close != 0]
+  close_avg <- mean(non_zero_close)
+  close_std <- sd(non_zero_close)
+  between <- prop_net$centralities$between1
+  non_zero_between <- between[between != 0]
+  between_avg <- mean(non_zero_between)
+  between_std <- sd(non_zero_between)
+  eigenv <- prop_net$centralities$eigenv1
+  non_zero_eigenv <- eigenv[eigenv != 0]
+  eigenv_avg <- mean(non_zero_eigenv)
+  eigenv_std <- sd(non_zero_eigenv)
   
-  # Create a named data frame row
+  
+  # Store the variables in a data frame
   result <- data.frame(
-    environment = env,
     all_nodes = all_nodes,
     nodes = nodes,
     edges = edges,
@@ -443,29 +570,18 @@ for (env in environments) {
     modularity = modularity,
     clustering_coeff = clustering_coeff,
     density = density,
-    deg_avg = deg_stats[1],
-    deg_std = deg_stats[2],
-    close_avg = close_stats[1],
-    close_std = close_stats[2],
-    between_avg = between_stats[1],
-    between_std = between_stats[2],
-    eigenv_avg = eigenv_stats[1],
-    eigenv_std = eigenv_stats[2]
+    deg_avg = deg_avg,
+    deg_std = deg_std,
+    close_avg = close_avg,
+    close_std = close_std,
+    between_avg = between_avg,
+    between_std = between_std,
+    eigenv_avg = eigenv_avg,
+    eigenv_std = eigenv_std
   )
   
-  # Append to results list
-  results_list[[env]] <- result
+
 }
-
-# Combine all rows into a single data frame
-final_results <- do.call(rbind, results_list)
-
-# Save to CSV
-write.csv(final_results, file = paste0(network_path, "network_properties.csv"),
-                                row.names = FALSE)
-
-# Optional: print summary
-print(final_results)
 
 ```
 
@@ -598,7 +714,7 @@ dev.off()
 
 ```{r}
 # Consolidation of hub information
-centralities <- c("degree1", "close1", "eigenv1")
+centralities <- c("degree1", "between1", "close1", "eigenv1")
 
 # Storing the results in a list for plotting
 centrality_list <- list()
@@ -637,21 +753,3 @@ for (env in environments) {
             row.names = FALSE)
 }
 ```
-```{r}
-# Degree distribution
-
-for (env in environments) {
-  net_values <- get(paste0("properties_", env))
-  deg_list <- net_values$centralities$degree1
-  deg_list <- deg_list[deg_list != 0]
-  
-  plot(density(deg_list), main = "Density Plot (Non-zero Values)", col = "blue")
-  
-}
-
-
-```
-
-
-
-
