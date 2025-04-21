@@ -1,0 +1,605 @@
+---
+title: "Diversity Plots and Network Analysis of Microbiome Data"
+author: "Pratyay Sengupta, Vijay Kapse"
+date: "February 14, 2024"
+output: R_analysis
+---
+
+# Introduction
+
+This document presents an analysis of microbial community diversity and network properties using R. We utilize phylogenetic and abundance data to assess alpha and beta diversity, construct networks, and perform comparative analyses across different environments.
+
+------------------------------------------------------------------------
+
+# 1. Loading Required Packages
+
+```{r load-packages, echo=TRUE}
+# Load required R packages
+library(dplyr)
+library(ggplot2)
+library(ggforce)
+library(ggpubr)
+library(gplots)
+library(igraph)
+library(LaplacesDemon)
+library(limma)
+library(microbiome)
+library(NetCoMi)
+library(patchwork)
+library(phyloseq)
+library(poweRlaw)
+library(sjPlot)
+library(vegan)
+library(dendextend)
+```
+
+# 2. Loading and Preparing Data
+
+```{r}
+# Define file paths
+path_phyloseq <- "/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/phyloseq_source/"
+path_network  <- "/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/network_files/"
+path_figures  <- "/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Figures/"
+
+# List of environments
+env_list <- c("all", "Hospital", "Metro", "Office")
+
+# Loop through environments and create phyloseq objects
+for (env in env_list) {
+  
+  # Construct file paths
+  file_otu     <- paste0(path_phyloseq, env, "_filtered_data.csv")
+  file_meta    <- paste0(path_phyloseq, env, "_filtered_metadata.csv")
+  file_taxa    <- paste0(path_phyloseq, env, "_filtered_taxa.csv")
+  
+  # Load OTU table
+  otu_df <- read.csv(file_otu, header = TRUE, row.names = 1, check.names = FALSE)
+  otu_mat <- otu_table(otu_df, taxa_are_rows = TRUE)
+  
+  # Load sample metadata
+  meta_df <- read.csv(file_meta, header = TRUE, row.names = 1)
+  meta_sample <- sample_data(meta_df)
+  
+  # Load taxonomy table
+  taxa_df <- read.csv(file_taxa, header = TRUE, row.names = 1)
+  taxa_mat <- tax_table(as.matrix(taxa_df))
+  
+  # Create phyloseq object
+  assign(paste0("physeq_", env), phyloseq(otu_mat, taxa_mat, meta_sample))
+}
+```
+
+# 3. Alpha Diversity Analysis
+
+## 3.1 Alpha Diversity Calculation and Plot
+
+```{r}
+# Calculate alpha diversity indices
+alpha_metrics <- microbiome::alpha(physeq_all, index = "all")
+
+# Plot Shannon diversity by environment
+plot_shannon <- boxplot_alpha(physeq_all, index = "shannon", x_var = "Environment", element.alpha = 0.5) +
+  geom_boxplot(width = 0.6, alpha = 0.7) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  labs(x = "Environment", y = "Shannon diversity")
+plot_shannon
+
+# Save plot
+ggsave(paste0(path_figures, "Figure_2B.pdf"), plot = plot_shannon, width = 6, height = 6)
+
+```
+
+## 3.2 Randomization of Alpha Diversity
+
+```{r}
+# Setting seed for reproducibility
+set.seed(123)
+
+# Extracting metadata
+metadata <- sample_data(physeq_all)
+metadata <- cbind(Sample = rownames(metadata), metadata)
+rownames(metadata) <- 1:nrow(metadata)
+
+# Find the environment with the lowest number of samples
+env_counts <- table(metadata$Environment)
+min_env <- names(which.min(env_counts))
+min_n <- min(env_counts)  # Smallest number of samples
+
+# Store results
+alpha_results <- data.frame()
+
+# Run 100 iterations of random sampling and alpha diversity calculations
+for (i in 1:100) {
+  sampled_meta <- metadata %>%
+    group_by(Environment) %>%
+    filter(Environment == min_env | row_number() %in% sample(1:n(), min_n)) %>%
+    ungroup()
+  
+  sampled_physeq <- prune_samples(sample_names(physeq_all) %in% sampled_meta$Sample, physeq_all)
+  
+  # Calculate alpha diversity
+  alpha_div <- microbiome::alpha(sampled_physeq, index = "shannon")
+  alpha_div$Environment <- sampled_meta$Environment  # Add environment column
+  alpha_div$Iteration <- i  # Track iteration
+  
+  # Store results
+  alpha_results <- rbind(alpha_results, alpha_div)
+}
+
+# Plot alpha diversity
+p.shannon.random <- ggplot(alpha_results, aes(x = Environment, y = diversity_shannon, color = Environment)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  theme_classic() +
+  theme(legend.position = "none")
+  labs(x = "Environment", y = "Shannon diversity") +
+  stat_compare_means(method = "anova", label.y = max(alpha_results$diversity_shannon) + 0.2) +  # Overall test
+  stat_compare_means(comparisons = list(c("Env1", "Env2"), c("Env1", "Env3"), c("Env2", "Env3")), method = "t.test")
+
+p.shannon.random
+
+# Saving the plot
+ggsave(paste0(path_figures, "Supplementary_Figure_2.pdf"), plot = p.shannon.random, 
+       width = 4, height = 5)
+
+```
+## 3.3 Alpha Diversity Significance Testing
+
+```{r}
+
+# Extract sample metadata
+meta_all <- meta(physeq_all)
+meta_all$shannon_diversity <- alpha_metrics$diversity_shannon
+
+# Split by environment
+div_split <- split(meta_all$shannon_diversity, meta_all$Environment)
+
+# Initialize p-value matrix
+p_value_mat <- matrix(NA, nrow = length(div_split), ncol = length(div_split))
+
+# Kolmogorov-Smirnov test
+for (i in 1:length(div_split)) {
+  for (j in 1:length(div_split)) {
+    if (i != j) {
+      p_val <- ks.test(div_split[[i]], div_split[[j]])$p.value
+      p_value_mat[i, j] <- p.adjust(p_val, method = "BH")
+    } else {
+      p_value_mat[i, j] <- 1
+    }
+  }
+}
+
+rownames(p_value_mat) <- colnames(p_value_mat) <- names(div_split)
+p_value_mat
+
+```
+
+# 4. Beta Diversity Analysis
+
+## 4.1 NMDS Ordination and Plotting
+
+```{r}
+# Calculate Bray-Curtis dissimilarity
+bray_dist <- distance(physeq_all, method = "bray")
+
+# NMDS ordination
+set.seed(123)
+nmds_out <- ordinate(physeq_all, method = "NMDS", distance = bray_dist)
+
+# Set limits
+x_limits <- c(-3.5, 5.5)
+y_limits <- c(-4.5, 4.5)
+
+# Plot NMDS
+plot_nmds <- plot_ordination(physeq_all, nmds_out, color = "Environment") +
+  geom_point(aes(color = Environment), size = 3) +
+  coord_cartesian(xlim = x_limits, ylim = y_limits) +
+  stat_ellipse(aes(x = NMDS1, y = NMDS2, group = Environment), geom = "polygon", alpha = 0.1, linetype = "dashed", color = "black") +
+  theme_minimal() +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+        plot.margin = margin(0, 0, 5, 5)
+        )
+
+plot_nmds
+
+```
+## 4.2 Marginal Boxplots for NMDS Axes
+
+```{r}
+# Getting the environmental data from the phyloseq object
+environment_data <- data.frame(sample_data(physeq_all))
+
+# Extract NMDS coordinates
+nmds_coords <- as.data.frame(nmds_out$points)
+nmds_coords <- cbind(nmds_coords, environment_data)
+
+# Set limits
+x_limits <- c(-3.5, 5.5)
+y_limits <- c(-4.5, 4.5)
+
+# Boxplot for NMDS1
+boxplot_NMDS2 <- ggplot(nmds_coords, aes(x = MDS1, y = 1, fill = Environment)) +
+  geom_boxplot() +
+  labs(x = "", y = "NMDS2") +
+  coord_cartesian(xlim = x_limits) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.text.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "none", 
+        panel.border = element_rect(color = "black", fill = NA, size = 1),
+        plot.margin = margin(5, 0, -10, 38)
+        )
+
+# Boxplot for NMDS2
+boxplot_NMDS1 <- ggplot(nmds_coords, aes(x = 1, y = MDS2, fill = Environment)) +
+  geom_boxplot() +
+  labs(x = "NMDS1", y = "") +
+  coord_cartesian(ylim = y_limits) +
+  #facet_wrap(~Environment) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        legend.position = "none",
+        panel.border = element_rect(color = "black", fill = NA, size = 1),
+        plot.margin = margin(0, 5, 29, -8)
+        )
+
+# Combine plots
+combined_plot <- ggarrange(boxplot_NMDS2, 
+                           NULL,
+                           plot_nmds + theme(legend.position = "none"), 
+                           boxplot_NMDS1, 
+                           ncol = 2, 
+                           nrow = 2,
+                           widths = c(10, 3),  
+                           heights = c(3, 10)
+                           )
+
+combined_plot
+
+# Save
+ggsave(paste0(path_figures, "Figure_2C.pdf"), plot = combined_plot, width = 6, height = 5)
+
+```
+
+## 4.3 Beta Diversity Significance Testing
+
+```{r}
+# PERMANOVA (Adonis) test
+adonis_out <- adonis2(bray_dist ~ Environment + Surface.Material + Location + Site, 
+                      data = as(sample_data(physeq_all), "data.frame"),
+                      permutations = 999,
+                      method = "bray",
+                      by = "terms")
+
+adonis_out
+```
+# 5. Taxonomic Composition at Class-Level
+
+```{r}
+
+# Aggregate rare taxa at Class level
+physeq_class_rel <- aggregate_rare(physeq_all, level = "class", detection = 0.001, prevalence = 0.1)
+
+# Plot composition
+plot_class_comp <- plot_composition(physeq_class_rel, average_by = "Environment") +
+  guides(fill = guide_legend(ncol = 1, title = "Abundant Class")) +
+  labs(x = "Environment", y = "Relative abundance") +
+  scale_fill_brewer(palette = "Paired") +
+  theme_minimal() +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+        legend.key = element_blank()) +
+  geom_bar(stat = "identity", position = "stack", aes(color = NA),
+           color = "black", show.legend = FALSE)
+  
+
+plot_class_comp
+
+# Save plot
+ggsave(paste0(path_figures, "Figure_2D.pdf"), plot = plot_class_comp, width = 6, height = 5)
+
+# Export underlying data
+comp_data <- reshape2::dcast(plot_class_comp$data, Tax ~ Sample, value.var = "Abundance", fill = 0)
+
+write.csv(comp_data, paste0("/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/3_class_abundance_data.tsv"), row.names = FALSE)
+
+```
+
+# 6. Network Analysis
+
+## 6.1 Network Construction
+
+```{r}
+
+# Exclude 'all' if present in environment list
+environments <- env_list[env_list != "all"]
+
+# Loop through each environment
+for (env in environments) {
+  message("Processing environment: ", env)
+  
+  # Extract phyloseq object for current environment
+  physeq_env <- get(paste0("physeq_", env))
+  
+  # Build microbial association network
+  net_object <- netConstruct(
+    physeq_env,
+    measure = "gcoda",          
+    normMethod = "TSS",         
+    zeroMethod = "multRepl",    
+    dissFunc = "signed",        
+    sparsMethod = "bootstrap",  
+    alpha = 0.05,               
+    adjust = "adaptBH",         
+    nboot = 1000L,              
+    logFile = "log.txt",        
+    cores = 8,                  
+    seed = 123,                 
+    verbose = 3
+  )
+  
+  # Analyze network properties
+  net_properties <- netAnalyze(
+    net_object,
+    clustMethod = "cluster_fast_greedy",  
+    weightDeg = FALSE,
+    centrLCC = TRUE,                      
+    hubPar = c("degree", "eigenvector", "closeness"),
+    gcmHeat = FALSE
+  )
+  
+  # Save network and properties
+  assign(paste0("network_", env), net_object)
+  assign(paste0("properties_", env), net_properties)
+  
+  # Export edge list (class level)
+  edge_details <- dplyr::select(net_object$edgelist1, v1, v2)
+  edge_details$Weight <- net_object$edgelist1$adja
+  write.csv(edge_details, file = paste0(path_network, env, "_edges.tsv"), row.names = FALSE)
+  
+  # Export nodes and edges for Gephi
+  #edges_gephi <- dplyr::select(net_object$edgelist1, v1, v2)
+  #edges_gephi$Source <- as.numeric(factor(edges_gephi$v1))
+  #edges_gephi$Target <- as.numeric(factor(edges_gephi$v2))
+  #edges_gephi$Type <- "Undirected"
+  #edges_gephi$Weight <- net_object$edgelist1$adja
+  
+  #nodes_gephi <- unique(edges_gephi[, c('v1', 'Source')])
+  #colnames(nodes_gephi) <- c("Label", "Id")
+  #nodes_gephi$Category <- net_properties$clustering$clust1[nodes_gephi$Label]
+  
+  #write.csv(nodes_gephi, file = paste0(network_path, "gephi_inputs/", env, "_nodes.csv"), row.names = FALSE)
+  #write.csv(dplyr::select(edges_gephi, Source, Target, Type, Weight), 
+  #          file = paste0(network_path, "gephi_inputs/", env, "_edges.csv"), row.names = FALSE)
+
+  }
+
+```
+
+## 6.2 Network Visualisation
+
+```{r}
+
+# Define color palettes for clusters
+color_palettes <- list(
+  c("coral4", "deeppink", "khaki3", "green4", "darkgreen"),
+  c("blue", "orange", "purple", "red", "yellow"),
+  c("cyan", "magenta", "plum", "salmon", "darkviolet")
+)
+
+# Plot network for each environment
+for (i in seq_along(environments)) {
+  env <- environments[i]
+  net_plot_obj <- get(paste0("properties_", env))
+  color_pal <- color_palettes[[i]]
+  
+  pdf(paste0(path_figures, env, "_network.pdf"), width = 12, height = 12)
+  
+  plot(net_plot_obj,
+       layout = "spring",
+       repulsion = 0.65,
+       labels = FALSE,
+       rmSingles = TRUE,
+       nodeColor = "cluster",
+       nodeSize = "degree",
+       nodeShape1 = "circle",
+       borderWidth = 1,
+       borderCol = "black",
+       nodeSizeSpread = 3,
+       cexNodes = 2,
+       colorVec = color_pal,
+       highlightHubs = FALSE,
+       nodeTransp = 0,
+       edgeWidth = 0.5,
+       negDiffCol = FALSE,
+       edgeTranspLow = 30,
+       edgeTranspHigh = 60)
+  
+  dev.off()
+}
+
+```
+
+## 6.3 Extracting and Consolidating Network Properties
+
+```{r}
+
+
+# Helper function to compute non-zero mean and std
+centrality_stats <- function(metric) {
+  non_zero <- metric[metric != 0]
+  avg <- mean(non_zero, na.rm = TRUE)
+  std <- sd(non_zero, na.rm = TRUE)
+  return(c(avg, std))
+}
+
+# Initialize list to collect results
+network_metrics_list <- list()
+
+for (env in environments) {
+  net_prop <- get(paste0("properties_", env))
+  net_obj <- get(paste0("network_", env))
+  
+  metrics <- data.frame(
+    environment = env,
+    lcc_nodes = length(net_prop$clusteringLCC$clust1),
+    edges = nrow(net_obj$edgelist1),
+    n_clusters = max(as.numeric(net_prop$clusteringLCC$clust1)),
+    modularity = net_prop$globalPropsLCC$modularity1,
+    clustering_coeff = net_prop$globalPropsLCC$clustCoef1,
+    density = net_prop$globalPropsLCC$density1,
+    degree_avg = centrality_stats(net_prop$centralities$degree1)[1],
+    degree_std = centrality_stats(net_prop$centralities$degree1)[2],
+    closeness_avg = centrality_stats(net_prop$centralities$close1)[1],
+    closeness_std = centrality_stats(net_prop$centralities$close1)[2],
+    betweenness_avg = centrality_stats(net_prop$centralities$between1)[1],
+    betweenness_std = centrality_stats(net_prop$centralities$between1)[2],
+    eigenvector_avg = centrality_stats(net_prop$centralities$eigenv1)[1],
+    eigenvector_std = centrality_stats(net_prop$centralities$eigenv1)[2]
+  )
+  
+  network_metrics_list[[env]] <- metrics
+}
+
+# Combine results and save
+final_network_metrics <- do.call(rbind, network_metrics_list)
+write.csv(final_network_metrics, file = paste0(path_network, "Network_properties.csv"), row.names = FALSE)
+
+# Display
+print(final_network_metrics)
+
+
+```
+
+## 6.4 Plot Relationship Between Features, Nodes, and Edges
+
+```{r}
+
+features <- c()
+nodes <- c()
+edges <- c()
+
+for (env in environments) {
+  physeq_env <- get(paste0("physeq_", env))
+  prop_env <- get(paste0("properties_", env))
+  net_env <- get(paste0("network_", env))
+  
+  features <- c(features, nrow(otu_table(physeq_env)))
+  nodes <- c(nodes, length(prop_env$clusteringLCC$clust1))
+  edges <- c(edges, nrow(net_env$edgelist1))
+}
+
+
+pdf(paste0(path_figures, "Supplementary_Figure_3B.pdf"), 
+    width = 12, height = 10)
+
+par(mfrow = c(1, 2)) 
+
+plot(features, nodes, xlab = "Number of Features", ylab = "Node count (LCC)",
+     main = "Features vs Node", pch = 16, cex = 2.5, cex.axis = 1.5,
+     cex.lab = 1.5, cex.main = 1.5, col = "green")
+
+plot(features, edges, xlab = "Number of Features", ylab = "Edge count",
+     main = "Features vs Edge", pch = 16, cex = 2.5, cex.axis = 1.5,
+     cex.lab = 1.5, cex.main = 1.5, col = "green")
+
+
+```
+
+## 6.5 Cluster Information and Similarity
+
+
+```{r}
+
+# Create cluster lists and save cluster info
+
+cluster_lists <- list()
+
+for (env in environments) {
+  prop_env <- get(paste0("properties_", env))
+  cluster_info <- data.frame(Cluster = prop_env$clusteringLCC$clust1)
+  
+  # Save cluster assignments
+  write.csv(cluster_info, file = paste0(path_network, "clusters/", env, "_LCC_clusters.csv"))
+  
+  n_clusters <- max(as.numeric(cluster_info$Cluster), na.rm = TRUE)
+  
+  for (i in 1:n_clusters) {
+    members <- rownames(cluster_info)[cluster_info$Cluster == i]
+    cluster_lists[[paste0(env, "_", i)]] <- members
+  }
+}
+
+
+# Calculate Jaccard distance matrix
+
+jaccard_distance <- function(set1, set2) {
+  intersection <- length(intersect(set1, set2))
+  union <- length(union(set1, set2))
+  return(1 - intersection / union)  # 1 - Jaccard index = distance
+}
+
+# Create empty similarity matrix
+n <- length(cluster_lists)
+distance_matrix <- matrix(0, n, n, dimnames = list(names(cluster_lists), names(cluster_lists)))
+
+for (i in 1:(n-1)) {
+  for (j in (i+1):n) {
+    distance_matrix[i, j] <- jaccard_distance(cluster_lists[[i]], cluster_lists[[j]])
+    distance_matrix[j, i] <- distance_matrix[i, j]
+  }
+}
+
+# Save distance matrix
+write.csv(distance_matrix, file = paste0(path_network, "clusters/distance_matrix.csv"))
+
+# Perform hierarchical clustering
+hc <- hclust(as.dist(distance_matrix))
+
+# Color palette
+label_colors_final <- c("yellow", "cyan", "red", "orange", "magenta",
+    "khaki3", "deeppink", "blue", "coral4", "purple")
+  
+# Save dendrogram to PDF
+pdf(file = paste0(path_figures, "Figure_3B.pdf"), width = 6, height = 5)
+
+# Plot hclust normally (preserving branch heights)
+plot(hc,
+     main = "",                  
+     xlab = "",                   
+     sub = "",                    
+     ylab = "Jaccard distance",   
+     )                    
+
+dev.off()
+
+```
+
+## 6.6 Hub Extraction
+
+
+```{r}
+
+# Identify hubs based on multiple centralities
+
+centralities <- c("degree1", "close1", "eigenv1")
+hub_list <- list()
+
+for (env in environments) {
+  prop_env <- get(paste0("properties_", env))
+  hub_df <- data.frame()
+  
+  for (cent in centralities) {
+    hubs <- head(sort(prop_env$centralities[[cent]], decreasing = TRUE), 10)
+    hub_info <- data.frame(Organism = names(hubs), Score = hubs)
+    names(hub_info)[2] <- cent
+    hub_df <- if (nrow(hub_df) == 0) hub_info else cbind(hub_df, hub_info)
+    
+    hub_list[[paste0(env, "_", cent)]] <- hub_info$Organism
+  }
+  
+  write.csv(hub_df, file = paste0(path_network, "hub_files/", env, "_hubs.tsv"), row.names = FALSE)
+}
+
+```
