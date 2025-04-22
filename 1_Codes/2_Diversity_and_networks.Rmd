@@ -302,7 +302,7 @@ ggsave(paste0(path_figures, "Figure_2D.pdf"), plot = plot_class_comp, width = 6,
 # Export underlying data
 comp_data <- reshape2::dcast(plot_class_comp$data, Tax ~ Sample, value.var = "Abundance", fill = 0)
 
-write.csv(comp_data, paste0("/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/3_class_abundance_data.tsv"), row.names = FALSE)
+write.csv(comp_data, paste0("/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/4_class_abundance_data.tsv"), row.names = FALSE)
 
 ```
 
