@@ -104,7 +104,7 @@ rownames(metadata) <- 1:nrow(metadata)
 # Find the environment with the lowest number of samples
 env_counts <- table(metadata$Environment)
 min_env <- names(which.min(env_counts))
-min_n <- min(env_counts)  # Smallest number of samples
+min_n <- min(env_counts)  
 
 # Store results
 alpha_results <- data.frame()
@@ -120,8 +120,8 @@ for (i in 1:100) {
   
   # Calculate alpha diversity
   alpha_div <- microbiome::alpha(sampled_physeq, index = "shannon")
-  alpha_div$Environment <- sampled_meta$Environment  # Add environment column
-  alpha_div$Iteration <- i  # Track iteration
+  alpha_div$Environment <- sampled_meta$Environment  
+  alpha_div$Iteration <- i  
   
   # Store results
   alpha_results <- rbind(alpha_results, alpha_div)
@@ -132,7 +132,7 @@ p.shannon.random <- ggplot(alpha_results, aes(x = Environment, y = diversity_sha
   geom_boxplot(alpha = 0.5, outlier.shape = NA) +
   geom_jitter(width = 0.2, alpha = 0.5) +
   theme_classic() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
   labs(x = "Environment", y = "Shannon diversity") +
   stat_compare_means(method = "anova", label.y = max(alpha_results$diversity_shannon) + 0.2) +  # Overall test
   stat_compare_means(comparisons = list(c("Env1", "Env2"), c("Env1", "Env3"), c("Env2", "Env3")), method = "t.test")
