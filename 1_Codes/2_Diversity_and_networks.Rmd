@@ -15,58 +15,80 @@ This document presents an analysis of microbial community diversity and network 
 
 ```{r load-packages, echo=TRUE}
 # Load required R packages
-library(dplyr)
-library(ggplot2)
-library(ggforce)
-library(ggpubr)
-library(gplots)
-library(igraph)
-library(LaplacesDemon)
-library(limma)
-library(microbiome)
-library(NetCoMi)
-library(patchwork)
-library(phyloseq)
-library(poweRlaw)
-library(sjPlot)
-library(vegan)
-library(dendextend)
+# --- Data Manipulation ---
+library(dplyr)           # Data manipulation and piping
+
+# --- Visualization ---
+library(ggplot2)        
+library(ggforce)        
+library(ggpubr)          
+library(gplots)          
+library(patchwork)       
+library(sjPlot)          
+
+# --- Microbiome Analysis ---
+library(microbiome)      
+library(phyloseq)        
+
+# --- Network Analysis ---
+library(igraph)          
+library(NetCoMi)        
+
+# --- Statistical Modeling ---
+library(LaplacesDemon)   
+library(limma)          
+library(poweRlaw)        
+library(vegan)          
+
+# --- Clustering / Trees ---
+library(dendextend)      
 ```
 
 # 2. Loading and Preparing Data
 
 ```{r}
-# Define file paths
+# --- Define directory paths ---
 path_phyloseq <- "/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/phyloseq_source/"
 path_network  <- "/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Output_data/network_files/"
 path_figures  <- "/mnt/Local_Disk_1/2_Hospital_Microbiome/Data/Figures/"
 
-# List of environments
+# --- List of environment categories ---
 env_list <- c("all", "Hospital", "Metro", "Office")
 
-# Loop through environments and create phyloseq objects
+# Optional: Store phyloseq objects in a list instead of global variables
+physeq_list <- list()
+
+# --- Loop through each environment and build phyloseq object ---
 for (env in env_list) {
+  message("Processing environment: ", env)
   
-  # Construct file paths
-  file_otu     <- paste0(path_phyloseq, env, "_filtered_data.csv")
-  file_meta    <- paste0(path_phyloseq, env, "_filtered_metadata.csv")
-  file_taxa    <- paste0(path_phyloseq, env, "_filtered_taxa.csv")
-  
-  # Load OTU table
-  otu_df <- read.csv(file_otu, header = TRUE, row.names = 1, check.names = FALSE)
+  # Construct file paths safely using file.path
+  file_otu  <- file.path(path_phyloseq, paste0(env, "_filtered_data.csv"))
+  file_meta <- file.path(path_phyloseq, paste0(env, "_filtered_metadata.csv"))
+  file_taxa <- file.path(path_phyloseq, paste0(env, "_filtered_taxa.csv"))
+
+  # Load OTU table and convert to otu_table
+  otu_df  <- read.csv(file_otu, header = TRUE, row.names = 1, check.names = FALSE)
   otu_mat <- otu_table(otu_df, taxa_are_rows = TRUE)
-  
+
   # Load sample metadata
-  meta_df <- read.csv(file_meta, header = TRUE, row.names = 1)
+  meta_df     <- read.csv(file_meta, header = TRUE, row.names = 1)
   meta_sample <- sample_data(meta_df)
-  
+
   # Load taxonomy table
-  taxa_df <- read.csv(file_taxa, header = TRUE, row.names = 1)
+  taxa_df  <- read.csv(file_taxa, header = TRUE, row.names = 1)
   taxa_mat <- tax_table(as.matrix(taxa_df))
-  
-  # Create phyloseq object
-  assign(paste0("physeq_", env), phyloseq(otu_mat, taxa_mat, meta_sample))
+
+  # Construct phyloseq object
+  physeq_obj <- phyloseq(otu_mat, taxa_mat, meta_sample)
+
+  # Option 1: Store in a list (recommended)
+  physeq_list[[env]] <- physeq_obj
+
+  # Option 2: Assign to global environment (less safe)
+  assign(paste0("physeq_", env), physeq_obj)
 }
+
 ```
 
 # 3. Alpha Diversity Analysis
@@ -80,13 +102,16 @@ alpha_metrics <- microbiome::alpha(physeq_all, index = "all")
 # Plot Shannon diversity by environment
 plot_shannon <- boxplot_alpha(physeq_all, index = "shannon", x_var = "Environment", element.alpha = 0.5) +
   geom_boxplot(width = 0.6, alpha = 0.7) +
-  theme_classic() +
-  theme(legend.position = "none") +
-  labs(x = "Environment", y = "Shannon diversity")
+  theme_bw() +
+  theme(legend.position = "none",
+        panel.border = element_rect(color = "black", fill = NA)) +
+  labs(x = "Environment", y = "Shannon diversity") +
+  ylim(0, 4.2)
 plot_shannon
 
 # Save plot
-ggsave(paste0(path_figures, "Figure_2B.pdf"), plot = plot_shannon, width = 6, height = 6)
+ggsave(paste0(path_figures, "Figure_2B.pdf"), plot = plot_shannon, width = 4,
+       height = 5)
 
 ```
 
@@ -129,18 +154,22 @@ for (i in 1:100) {
 
 # Plot alpha diversity
 p.shannon.random <- ggplot(alpha_results, aes(x = Environment, y = diversity_shannon, color = Environment)) +
-  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
   geom_jitter(width = 0.2, alpha = 0.5) +
-  theme_classic() +
-  theme(legend.position = "none") +
+  stat_compare_means(method = "anova", label.y = max(alpha_results$diversity_shannon) + 0.2) +  
+  stat_compare_means(comparisons = list(c("Env1", "Env2"), c("Env1", "Env3"), c("Env2", "Env3")), method = "t.test") +
   labs(x = "Environment", y = "Shannon diversity") +
-  stat_compare_means(method = "anova", label.y = max(alpha_results$diversity_shannon) + 0.2) +  # Overall test
-  stat_compare_means(comparisons = list(c("Env1", "Env2"), c("Env1", "Env3"), c("Env2", "Env3")), method = "t.test")
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    panel.border = element_rect(color = "black", fill = NA)
+  )
+
 
 p.shannon.random
 
 # Saving the plot
-ggsave(paste0(path_figures, "Supplementary_Figure_2.pdf"), plot = p.shannon.random, 
+ggsave(paste0(path_figures, "Supplementary_Figure_1B.pdf"), plot = p.shannon.random, 
        width = 4, height = 5)
 
 ```
