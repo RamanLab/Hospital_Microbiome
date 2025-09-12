@@ -1,0 +1,568 @@
+Illumina Library ID,Date of Collection,Surface Material,Site,Location,Environment
+MEE001,21/05/2019,Metal,Bed Rail,MDRO,Hospital
+MEE002,21/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE003,21/05/2019,Metal,Aerator,MDRO,Hospital
+MEE004,21/05/2019,Metal,Sink Trap,MDRO,Hospital
+MEE005,21/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE006,21/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE007,21/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE008,21/05/2019,Metal,Aerator,MDRO,Hospital
+MEE009,21/05/2019,Metal,Sink Trap,MDRO,Hospital
+MEE010,21/05/2019,Metal,Aerator,Standard,Hospital
+MEE011,21/05/2019,Metal,Sink Trap,Standard,Hospital
+MEE012,21/05/2019,Metal,Bed Rail,Standard,Hospital
+MEE013,21/05/2019,Wood,Bedside Locker,Standard,Hospital
+MEE014,21/05/2019,Metal and Wood,Cardiac Table,Standard,Hospital
+MEE015,21/05/2019,Metal,Sink Trap,Standard,Hospital
+MEE016,21/05/2019,Metal,Aerator,Standard,Hospital
+MEE017,22/05/2019,Metal,Aerator,Isolation room,Hospital
+MEE018,22/05/2019,Plastic,Bed Rail,Isolation room,Hospital
+MEE019,22/05/2019,Metal and Wood,Bedside Locker,Isolation room,Hospital
+MEE020,22/05/2019,Metal and Wood,Cardiac Table,Isolation room,Hospital
+MEE021,22/05/2019,Metal,Door handle,Isolation room,Hospital
+MEE022,22/05/2019,Rubber,Pulse oxymeter,Isolation room,Hospital
+MEE023,22/05/2019,Metal,Sink Trap,Isolation room,Hospital
+MEE024,22/05/2019,Metal,Aerator,Isolation room,Hospital
+MEE025,22/05/2019,Plastic,Bed Rail,Isolation room,Hospital
+MEE026,22/05/2019,Metal and Wood,Bedside Locker,Isolation room,Hospital
+MEE027,22/05/2019,Metal and Wood,Cardiac Table,Isolation room,Hospital
+MEE028,22/05/2019,Rubber,Pulse oxymeter,Isolation room,Hospital
+MEE029,22/05/2019,Metal,Sink Trap,Isolation room,Hospital
+MEE030,22/05/2019,Metal,Aerator,Isolation room,Hospital
+MEE031,22/05/2019,Plastic,Bed Rail,Isolation room,Hospital
+MEE032,22/05/2019,Metal and Wood,Bedside Locker,Isolation room,Hospital
+MEE033,22/05/2019,Metal and Wood,Cardiac Table,Isolation room,Hospital
+MEE035,22/05/2019,Rubber,Pulse oxymeter,Isolation room,Hospital
+MEE036,22/05/2019,Metal,Sink Trap,Isolation room,Hospital
+MEE037,27/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE038,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE039,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE040,27/05/2019,Metal,Bed Rail,MDRO,Hospital
+MEE041,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE042,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE043,27/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE044,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE045,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE046,27/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE047,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE048,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE049,27/05/2019,Metal,Aerator,MDRO,Hospital
+MEE050,27/05/2019,Metal,Sink Trap,MDRO,Hospital
+MEE051,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE052,27/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE053,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE054,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE055,27/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE056,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE057,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE058,27/05/2019,Plastic,Bed Rail,MDRO,Hospital
+MEE059,27/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+MEE060,27/05/2019,Metal and Wood,Cardiac Table,MDRO,Hospital
+MEE061,27/05/2019,Metal,Aerator,MDRO,Hospital
+MEE062,27/05/2019,Metal,Sink Trap,MDRO,Hospital
+MEE063,30/05/2019,Metal,Aerator,Isolation room,Hospital
+MEE064,30/05/2019,Metal,Sink Trap,Isolation room,Hospital
+MEE065,30/05/2019,Metal,Aerator,Isolation room,Hospital
+MEE066,30/05/2019,Metal,Sink Trap,Isolation room,Hospital
+MEE067,30/05/2019,Metal,Bed Rail,Standard,Hospital
+MEE068,30/05/2019,Metal and Wood,Bedside Locker,Standard,Hospital
+MEE069,30/05/2019,Metal,Cardiac Table,Standard,Hospital
+MEE070,30/05/2019,Metal,Aerator,Standard,Hospital
+MEE071,30/05/2019,Rubber,Pulse oxymeter,Standard,Hospital
+MEE072,30/05/2019,Metal,Sink Trap,Standard,Hospital
+MEE073,30/05/2019,Metal,Aerator,Standard,Hospital
+MEE074,30/05/2019,Metal,Sink Trap,Standard,Hospital
+WEE025,24/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE026,28/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE027,28/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE028,24/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE029,24/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE030,28/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE031,28/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE032,24/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE033,28/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE034,24/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE035,28/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE036,28/11/2017,Metal,Bed Rail,Isolation room,Hospital
+WEE037,28/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE038,24/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE039,24/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE040,28/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE041,24/11/2017,Metal,Cardiac Table,Isolation room,Hospital
+WEE042,28/11/2017,Plastic and wood,Cardiac Table,Isolation room,Hospital
+WEE043,28/11/2017,Metal and Wood,Cardiac Table,Isolation room,Hospital
+WEE044,28/11/2017,Metal and Wood,Cardiac Table,Isolation room,Hospital
+WEE045,28/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE046,28/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE047,24/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE048,28/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE049,24/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE050,24/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE051,28/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE052,24/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE053,28/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE054,24/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE055,28/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE056,24/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE057,28/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE058,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE059,30/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE060,30/11/2017,Metal,Cardiac Table,MDRO,Hospital
+WEE061,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE062,30/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE063,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE064,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE065,30/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE066,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE067,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE068,30/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE069,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE070,28/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE071,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE072,30/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE073,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE074,30/11/2017,Metal,Aerator,MDRO,Hospital
+WEE075,30/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE076,30/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE077,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE078,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE079,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE080,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE081,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE082,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE083,23/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE084,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE085,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE086,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE087,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE088,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE089,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE090,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE091,23/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE092,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE093,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE094,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE095,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE096,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE097,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE098,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE099,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE100,23/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE101,30/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE102,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE103,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE104,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE105,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE106,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE107,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE108,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE109,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE110,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE111,23/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE112,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE113,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE114,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE115,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE116,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE117,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE118,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE119,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE120,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE121,30/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE122,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE123,30/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE124,28/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE125,28/11/2017,Metal,Aerator,MDRO,Hospital
+WEE126,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE127,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE128,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE129,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE130,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE131,28/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE132,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE133,30/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE134,30/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE135,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE136,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE137,30/11/2017,Metal,Aerator,Standard,Hospital
+WEE138,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE139,24/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE140,28/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE141,24/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE142,24/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE143,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE144,28/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE145,28/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE146,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE147,24/11/2017,Metal,Cardiac Table,Isolation room,Hospital
+WEE148,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE149,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE150,24/11/2017,Metal,Cardiac Table,Isolation room,Hospital
+WEE151,24/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE152,24/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE153,24/11/2017,Metal,Cardiac Table,Isolation room,Hospital
+WEE154,28/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE155,28/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE156,24/11/2017,Metal and Wood,Bedside Locker,Isolation room,Hospital
+WEE157,24/11/2017,Metal,Bed Rail,Isolation room,Hospital
+WEE158,23/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE159,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE160,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE161,23/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE162,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE163,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE164,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE165,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE166,24/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE167,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE168,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE169,28/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE170,30/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE171,24/11/2017,Metal,Cardiac Table,Isolation room,Hospital
+WEE172,28/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE173,28/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE174,28/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE175,28/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE176,28/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE177,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE178,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE179,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE180,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE181,23/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE182,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE183,23/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE184,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE185,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE186,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE187,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE188,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE189,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE190,30/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE191,24/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE192,28/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE193,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE194,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE195,30/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE196,28/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE197,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE198,28/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE199,29/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE200,29/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE201,29/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE202,29/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE203,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE204,29/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE205,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE206,29/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE207,29/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE208,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE209,30/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE210,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE211,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE212,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE213,30/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE214,30/11/2017,Metal,Aerator,MDRO,Hospital
+WEE215,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE216,29/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE217,30/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE218,29/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE219,30/11/2017,Metal,Aerator,Standard,Hospital
+WEE220,29/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE221,29/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE222,30/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE223,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE224,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE225,30/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE226,30/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE227,29/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE228,29/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE229,29/11/2017,Metal,Cardiac Table,MDRO,Hospital
+WEE230,29/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE231,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE232,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE233,29/11/2017,Metal,Aerator,MDRO,Hospital
+WEE234,29/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE235,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE236,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE237,24/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE238,29/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE239,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE240,29/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE241,29/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE242,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE243,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE244,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE245,29/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE246,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE247,29/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE248,30/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE249,29/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE250,29/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE251,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE252,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE253,30/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE254,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE255,24/11/2017,Metal,Cardiac Table,MDRO,Hospital
+WEE256,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE257,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE258,30/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE259,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE260,30/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE261,24/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE262,23/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE263,30/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE264,23/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE265,24/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE266,29/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE267,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE268,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE269,23/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE270,30/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE271,23/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE272,29/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE273,29/11/2017,Metal and Wood,Cardiac Table,Isolation room,Hospital
+WEE274,29/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE275,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE276,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE277,30/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE278,23/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE279,23/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE280,23/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE281,23/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE282,23/11/2017,Metal,Sink Trap,MDRO,Hospital
+WEE283,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE284,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE285,30/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE286,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE287,23/11/2017,Metal,Aerator,MDRO,Hospital
+WEE288,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE289,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE290,24/11/2017,Metal,Aerator,MDRO,Hospital
+WEE291,23/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE292,23/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE293,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE294,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE295,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE296,24/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE297,23/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE298,28/11/2017,Metal,Aerator,Isolation room,Hospital
+WEE299,24/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE300,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE301,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE302,24/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE303,24/11/2017,Plastic,Bed Rails,MDRO,Hospital
+WEE304,23/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE305,24/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE306,24/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE307,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE308,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE309,23/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE310,23/11/2017,Metal,Bed Rails,MDRO,Hospital
+WEE311,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE312,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE313,24/11/2017,Metal,Cardiac Table,MDRO,Hospital
+WEE314,23/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE315,24/11/2017,Metal,Aerator,MDRO,Hospital
+WEE316,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE317,24/11/2017,Metal,Cardiac Table,MDRO,Hospital
+WEE318,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE319,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE320,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE321,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE322,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE323,23/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE324,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE325,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE326,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE327,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE328,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE329,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE332,24/11/2017,Metal and Wood,Cardiac Table,MDRO,Hospital
+WEE333,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE334,30/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE335,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE336,30/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE337,30/11/2017,Metal,Aerator,Standard,Hospital
+WEE338,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE339,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE340,24/11/2017,Wood,Bedside Locker,MDRO,Hospital
+WEE341,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE342,24/11/2017,Metal,Aerator,MDRO,Hospital
+WEE343,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE344,30/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE345,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE346,23/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE347,23/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE348,23/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE351,23/11/2017,Metal,Aerator,Standard,Hospital
+WEE352,23/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE353,28/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE354,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE355,23/11/2017,Metal,Aerator,Standard,Hospital
+WEE356,23/11/2017,Metal,Aerator,Standard,Hospital
+WEE357,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE358,30/11/2017,Metal,Aerator,Standard,Hospital
+WEE359,23/11/2017,Metal,Sink Trap,Standard,Hospital
+WEE360,23/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE361,23/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE362,23/11/2017,Metal,Aerator,Standard,Hospital
+WEE363,24/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE364,24/11/2017,Wood,Bedside Locker,Isolation room,Hospital
+WEE365,24/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE366,24/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE367,23/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE370,29/11/2017,Metal,Sink Trap,Isolation room,Hospital
+WEE371,29/11/2017,Rubber,Pulse Oxymeter,MDRO,Hospital
+WEE372,29/11/2017,Metal,Cardiac Table,Isolation room,Hospital
+WEE373,30/11/2017,Plastic,Bed Rails,Standard,Hospital
+WEE374,30/11/2017,Metal,Bed Rails,Standard,Hospital
+WEE375,30/11/2017,Wood,Bedside Locker,Standard,Hospital
+WEE376,23/11/2017,Metal and Wood,Bedside Locker,Standard,Hospital
+WEE377,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE378,23/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE379,24/11/2017,Metal,Door Handle,Isolation room,Hospital
+WEE380,28/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+WEE381,24/11/2017,Plastic,Bed Rail,Isolation room,Hospital
+WEE382,30/11/2017,Metal,Cardiac Table,Standard,Hospital
+WEE384,30/11/2017,Metal and Wood,Cardiac Table,Standard,Hospital
+WEE385,23/11/2017,Rubber,Pulse Oxymeter,Standard,Hospital
+WEE386,24/11/2017,Metal,Door Handle,Isolation room,Hospital
+X,21/05/2019,Metal,Bed Rail,Standard,Hospital
+X,21/05/2019,Metal and Wood,Bedside Locker,MDRO,Hospital
+X,21/05/2019,Metal and Wood,Bedside Locker,Standard,Hospital
+X,21/05/2019,Metal and Wood,Cardiac Table,Standard,Hospital
+X,22/05/2019,Metal,Door handle,Isolation room,Hospital
+X,22/05/2019,Metal,Door handle,Isolation room,Hospital
+X,27/05/2019,Rubber,Pulse Oxymeter,MDRO,Hospital
+X,24/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+X,24/11/2017,Rubber,Pulse Oxymeter,Isolation room,Hospital
+X,24/11/2017,Metal,Sink Trap,MDRO,Hospital
+SL357394,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL357395,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL357396,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357397,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357402,NA,Metal,handrail,Singapore Metro,Metro
+SL357403,NA,Metal,handrail,Singapore Metro,Metro
+SL343391,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL343392,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL343393,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL343376,NA,Metal,handrail,Singapore Metro,Metro
+SL343377,NA,Metal,handrail,Singapore Metro,Metro
+SL343375,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL343355,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL343344,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL343507,NA,Metal,handrail,Singapore Metro,Metro
+SL343333,NA,Metal,handrail,Singapore Metro,Metro
+SL343360,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL343348,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL343368,NA,Metal,handrail,Singapore Metro,Metro
+SL336366,NA,painted_metal,overhead_handrail,Singapore Metro,Metro
+SL357383,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL357436,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL357437,NA,Metal,overhead_handrail,Singapore Metro,Metro
+SL357438,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357441,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357393,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357439,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357362,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357363,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357364,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357365,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357370,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357371,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357350,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357351,NA,painted_metal,handrail,Singapore Metro,Metro
+SL357352,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357353,NA,Metal,pedestrian_crossing_button,Singapore Metro,Metro
+SL357358,NA,Metal,handrail,Singapore Metro,Metro
+SL357359,NA,Metal,handrail,Singapore Metro,Metro
+SL357430,NA,Metal,seat,Singapore Metro,Metro
+SL357431,NA,Metal,seat,Singapore Metro,Metro
+SL336368,NA,metal_plastic,seat,Singapore Metro,Metro
+SL357388,NA,metal_plastic,seat,Singapore Metro,Metro
+SL357378,NA,Plastic,seat,Singapore Metro,Metro
+SL357379,NA,Plastic,seat,Singapore Metro,Metro
+SL343384,NA,Metal,seat,Singapore Metro,Metro
+SL343385,NA,Metal,seat,Singapore Metro,Metro
+SL343353,NA,Metal,seat,Singapore Metro,Metro
+SL343346,NA,Metal,seat,Singapore Metro,Metro
+SL357406,NA,Plastic,table,Singapore Metro,Metro
+SL357407,NA,Plastic,table,Singapore Metro,Metro
+SL357408,NA,Plastic,seat,Singapore Metro,Metro
+SL357409,NA,Plastic,seat,Singapore Metro,Metro
+SL357412,NA,granite,table,Singapore Metro,Metro
+SL357413,NA,granite,table,Singapore Metro,Metro
+SL357410,NA,Metal,seat,Singapore Metro,Metro
+SL357411,NA,Metal,seat,Singapore Metro,Metro
+SL357416,NA,Metal,lift_buttons,Singapore Metro,Metro
+SL357417,NA,Metal,lift_buttons,Singapore Metro,Metro
+SL357420,NA,Metal,handrail,Singapore Metro,Metro
+SL357421,NA,Metal,handrail,Singapore Metro,Metro
+SL357422,NA,Metal,playground,Singapore Metro,Metro
+SL357423,NA,Metal,playground,Singapore Metro,Metro
+SL357424,NA,Plastic,playground,Singapore Metro,Metro
+SL357425,NA,Plastic,playground,Singapore Metro,Metro
+SL343511,NA,Plastic,table,Singapore Metro,Metro
+SL343354,NA,Plastic,table,Singapore Metro,Metro
+SL343363,NA,Plastic,seat,Singapore Metro,Metro
+SL343510,NA,Plastic,seat,Singapore Metro,Metro
+SL343372,NA,metal_plastic,exercise_hand_grip,Singapore Metro,Metro
+SL343364,NA,metal_plastic,exercise_hand_grip,Singapore Metro,Metro
+SL343508,NA,Wood,seat,Singapore Metro,Metro
+SL343356,NA,Wood,seat,Singapore Metro,Metro
+SL343331,NA,Metal,lift_buttons,Singapore Metro,Metro
+SL343341,NA,Metal,lift_buttons,Singapore Metro,Metro
+SL343351,NA,Metal,handrail,Singapore Metro,Metro
+SL343334,NA,Metal,handrail,Singapore Metro,Metro
+SL343362,NA,metal_plastic,playground,Singapore Metro,Metro
+SL343330,NA,metal_plastic,playground,Singapore Metro,Metro
+SL343512,NA,metal_plastic,playground,Singapore Metro,Metro
+SL343345,NA,metal_plastic,playground,Singapore Metro,Metro
+SL343504,NA,Plastic,table,Singapore Metro,Metro
+SL343515,NA,Plastic,seat,Singapore Metro,Metro
+SL343337,NA,Plastic,seat,Singapore Metro,Metro
+SL343349,NA,Plastic,seat,Singapore Metro,Metro
+SL343339,NA,granite,table,Singapore Metro,Metro
+SL343359,NA,granite,table,Singapore Metro,Metro
+SL343516,NA,granite,seat,Singapore Metro,Metro
+SL343502,NA,Metal,lift_buttons,Singapore Metro,Metro
+SL343514,NA,Metal,handrail,Singapore Metro,Metro
+SL343347,NA,Metal,handrail,Singapore Metro,Metro
+SL343336,NA,Plastic,playground,Singapore Metro,Metro
+SL343503,NA,Plastic,playground,Singapore Metro,Metro
+SL343505,NA,Plastic,playground,Singapore Metro,Metro
+SL343367,NA,Plastic,playground,Singapore Metro,Metro
+SL357386,NA,Metal,lift_buttons,Singapore Metro,Metro
+SL357387,NA,Metal,handrail,Singapore Metro,Metro
+SL343388,NA,pvc,table,Singapore Metro,Metro
+SL343390,NA,pvc,seat,Singapore Metro,Metro
+MEM001,24/07/2019,Wood,Desk,Office,Office
+MEM002,24/07/2019,Wood,Desk,Office,Office
+MEM003,24/07/2019,Rubber,Chair Handles,Office,Office
+MEM004,24/07/2019,Plastic,Keyboard,Office,Office
+MEM005,24/07/2019,Wood,Desk,Office,Office
+MEM006,24/07/2019,Rubber,Chair Handles,Office,Office
+MEM007,24/07/2019,Plastic,Keyboard,Office,Office
+MEM008,24/07/2019,Rubber,Chair Handles,Office,Office
+MEM009,24/07/2019,Plastic,Keyboard,Office,Office
+MEM010,24/07/2019,Metal and silicon,Sink Trap,Male Toilet,Office
+MEM011,24/07/2019,Plastic,Aerator,Male Toilet,Office
+MEM012,24/07/2019,Metal and silicon,Sink Trap,Male Toilet,Office
+MEM013,24/07/2019,Plastic,Aerator,Male Toilet,Office
+MEM014,24/07/2019,Metal and silicon,Sink Trap,Male Toilet,Office
+MEM015,24/07/2019,Plastic,Aerator,Male Toilet,Office
+MEM016,24/07/2019,Metal and silicon,Sink Trap,Male Toilet,Office
+MEM017,24/07/2019,Plastic,Aerator,Male Toilet,Office
+MEM018,24/07/2019,Metal and silicon,Sink Trap,Female Toilet,Office
+MEM019,24/07/2019,Plastic,Aerator,Female Toilet,Office
+MEM020,24/07/2019,Metal and silicon,Sink Trap,Female Toilet,Office
+MEM021,24/07/2019,Plastic,Aerator,Female Toilet,Office
+MEM022,24/07/2019,Metal and silicon,Sink Trap,Female Toilet,Office
+MEM023,24/07/2019,Plastic,Aerator,Female Toilet,Office
+MEM024,24/07/2019,Metal and silicon,Sink Trap,Female Toilet,Office
+MEM025,24/07/2019,Plastic,Aerator,Female Toilet,Office
+WEE330,31/01/2018,Metal,Door Handles,Meeting Room,Office
+WEE349,31/01/2018,Plastic,Aerator,Female Toilet,Office
+WEE368,31/01/2018,Metal and silicon,Sink Trap,Female Toilet,Office
+WEE387,31/01/2018,Rubber,Chair handles,Meeting Room,Office
+WEE388,31/01/2018,Wood,Desk,Meeting Room,Office
